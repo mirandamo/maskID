@@ -123,7 +123,7 @@ class FaceMask:
 
     def save_img(self):
         path_splits = os.path.splitext(self.image_path)
-        new_face_path = "/Users/mlunghi/Desktop/maskID/preprocessing/results/" + str(self.pic_id) + '-with-mask' + path_splits[1]
+        new_face_path = os.getcwd() + "/results/" + str(self.pic_id) + '-with-mask' + path_splits[1]
         self._face_img.save(new_face_path)
         print(f'Saved masked image to {new_face_path}')
 
@@ -150,11 +150,11 @@ def loop_over_data(path, path_to_mask_image):
         
         #handles exceptions in case of weird file types
         # generate_masks_on_images(image, path_to_mask_image, i)
-        try:
-            generate_masks_on_images(image, path_to_mask_image)
-        except (e):
-            print("invalid file type")
-            continue
+        # try:
+        generate_masks_on_images(image, path_to_mask_image, i)
+        # except:
+        #     print("invalid file type")
+        #     continue
     return
 
 def main():
