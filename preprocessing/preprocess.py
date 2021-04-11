@@ -150,11 +150,11 @@ def loop_over_data(path, path_to_mask_image):
         
         #handles exceptions in case of weird file types
         # generate_masks_on_images(image, path_to_mask_image, i)
-        # try:
-        generate_masks_on_images(image, path_to_mask_image, i)
-        # except:
-        #     print("invalid file type")
-        #     continue
+        try:
+            generate_masks_on_images(image, path_to_mask_image, i)
+        except:
+            print("invalid file type")
+            continue
     return
 
 def main():
