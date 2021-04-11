@@ -40,16 +40,20 @@ while True:
         # print(reshaped.shape)
         
         label=np.argmax(result,axis=1)[0]
-        has_mask = labels_dict[label] == "mask"
+        mask_text = labels_dict[label]
+        has_mask = mask_text == "mask"
         name = "?"
         if has_mask:
             name = mask_classifier(face_img)
-        else:
-            name = nomask_classifier(face_img)
-        print(name)
-        cv2.rectangle(im,(x,y),(x+w,y+h),color_dict[label],2)
-        cv2.rectangle(im,(x,y-40),(x+w,y),color_dict[label],-1)
-        cv2.putText(im, labels_dict[label], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
+        # else:
+        #     name = nomask_classifier(face_img)
+        # print(name)
+        color = (0,0,255) if name == "?" else (0,255,0)
+        cv2.rectangle(im,(x,y),(x+w,y+h),color,2)
+        cv2.rectangle(im,(x,y-40),(x+w,y),color,-1)
+        cv2.rectangle(im,(x,y+h),(x+w,y+h+40),color,-1)
+        cv2.putText(im, name, (x+(w//2)-len(name)*10, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
+        cv2.putText(im, mask_text, (x+(w//2)-len(mask_text)*8, y+h+30),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
         
     # Show the image
     cv2.imshow('LIVE',   im)
