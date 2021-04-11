@@ -31,9 +31,13 @@ while True:
         reshaped=np.reshape(normalized,(1,150,150,3))
         reshaped = np.vstack([reshaped])
         result=model.predict(reshaped)
-        #print(result)
+        # print(reshaped.shape)
         
         label=np.argmax(result,axis=1)[0]
+        has_mask = labels_dict[label] == "mask"
+        name = "?"
+        # if has_mask:
+                
       
         cv2.rectangle(im,(x,y),(x+w,y+h),color_dict[label],2)
         cv2.rectangle(im,(x,y-40),(x+w,y),color_dict[label],-1)
