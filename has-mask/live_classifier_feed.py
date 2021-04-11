@@ -8,9 +8,19 @@ from maskModel.model import mask_classifier
 from nomaskModel.model import nomask_classifier
 
 model=load_model("./model2-010.model")
-
-labels_dict={0:'without mask',1:'mask'}
+labels_dict={False:'without mask',True:'mask'}
 color_dict={0:(0,0,255),1:(0,255,0)}
+
+def hasMask(img):
+    resized=cv2.resize(img,(150,150))
+    normalized=resized/255.0
+    reshaped=np.reshape(normalized,(1,150,150,3))
+    reshaped = np.vstack([reshaped])
+    result=model.predict(reshaped)
+    label=np.argmax(result,axis=1)[0]
+    has_mask = label == 1
+    return has_mask
+
 
 size = 4
 webcam = cv2.VideoCapture(0) #Use camera 0
@@ -32,21 +42,17 @@ while True:
         (x, y, w, h) = [v * size for v in f] #Scale the shapesize backup
         #Save just the rectangle faces in SubRecFaces
         face_img = im[y:y+h, x:x+w]
-        resized=cv2.resize(face_img,(150,150))
-        normalized=resized/255.0
-        reshaped=np.reshape(normalized,(1,150,150,3))
-        reshaped = np.vstack([reshaped])
-        result=model.predict(reshaped)
+        
         # print(reshaped.shape)
         
-        label=np.argmax(result,axis=1)[0]
-        mask_text = labels_dict[label]
-        has_mask = mask_text == "mask"
+        
+        has_mask = hasMask(face_img)
+        mask_text = labels_dict[has_mask]
         name = "?"
         if has_mask:
             name = mask_classifier(face_img)
-        # else:
-        #     name = nomask_classifier(face_img)
+        else:
+            name = nomask_classifier(face_img)
         # print(name)
         color = (0,0,255) if name == "?" else (0,255,0)
         cv2.rectangle(im,(x,y),(x+w,y+h),color,2)
