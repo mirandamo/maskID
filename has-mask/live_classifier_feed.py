@@ -1,6 +1,12 @@
 import cv2
 import numpy as np
 from keras.models import load_model
+import os
+import sys
+sys.path.append(os.path.abspath('..')) 
+from maskModel.model import mask_classifier
+from nomaskModel.model import nomask_classifier
+
 model=load_model("./model2-010.model")
 
 labels_dict={0:'without mask',1:'mask'}
@@ -36,9 +42,11 @@ while True:
         label=np.argmax(result,axis=1)[0]
         has_mask = labels_dict[label] == "mask"
         name = "?"
-        # if has_mask:
-                
-      
+        if has_mask:
+            name = mask_classifier(reshaped)
+        else:
+            name = nomask_classifier(reshaped)
+        print(name)
         cv2.rectangle(im,(x,y),(x+w,y+h),color_dict[label],2)
         cv2.rectangle(im,(x,y-40),(x+w,y),color_dict[label],-1)
         cv2.putText(im, labels_dict[label], (x, y-10),cv2.FONT_HERSHEY_SIMPLEX,0.8,(255,255,255),2)
