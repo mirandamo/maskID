@@ -43,9 +43,9 @@ while True:
         has_mask = labels_dict[label] == "mask"
         name = "?"
         if has_mask:
-            name = mask_classifier(reshaped)
+            name = mask_classifier(face_img)
         else:
-            name = nomask_classifier(reshaped)
+            name = nomask_classifier(face_img)
         print(name)
         cv2.rectangle(im,(x,y),(x+w,y+h),color_dict[label],2)
         cv2.rectangle(im,(x,y-40),(x+w,y),color_dict[label],-1)
