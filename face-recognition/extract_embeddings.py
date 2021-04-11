@@ -103,3 +103,16 @@ data = {"embeddings": knownEmbeddings, "names": knownNames}
 f = open(args["embeddings"], "wb")
 f.write(pickle.dumps(data))
 f.close()
+
+
+## GENERATE FEATURE VECTORS
+# python .\extract_embeddings.py --dataset dataset --embeddings output/embeddings.pickle --detector face_detection_model --embedding-model .\openface.nn4.small2.v1.t7
+
+## TRAIN WITH SVM
+# python .\train_model.py --embeddings .\output\embeddings.pickle --recognizer output/recognizer.pickle --le output/le.pickle
+
+## RECOGNIZE IMAGE
+# python recognize.py --detector face_detection_model --embedding-model openface.nn4.small2.v1.t7 --recognizer output/recognizer.pickle	 --le output/le.pickle --image images/michael/mike.jpg
+
+## RECOGNIZE LIVE VIDEO
+# python .\recognize_video.py --detector .\face_detection_model\ --embedding-model .\openface.nn4.small2.v1.t7 --recognizer .\output\recognizer.pickle --le .\output\le.pickle

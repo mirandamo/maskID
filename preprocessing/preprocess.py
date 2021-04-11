@@ -13,7 +13,7 @@ __version__ = '0.3.0'
 
 def load_olivetti(path):
     # load olivetti face dataset
-    return sklearn.datasets.fetch_olivetti_faces(path, data_home=None, shuffle=False, random_state=0, download_if_missing=True, return_X_y=False)
+    return sklearn.datasets.fetch_olivetti_faces(path, shuffle=False, random_state=0, download_if_missing=True, return_X_y=False)
 
 
 def generate_masks_on_images(data_path, path_to_mask_image, pic_id):
@@ -162,7 +162,7 @@ def main():
     # choose dataset path
     # olivetti option
     # path_data = "without_mask_data/olivetti/images" #arg parse this
-    path_data = "without_mask_data/test1"
+    path_data = "without_mask_data/test2"
     # blue mask option
     path_to_mask_image = "mask_images/blue-mask.png"
 

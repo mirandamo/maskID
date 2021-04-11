@@ -43,7 +43,8 @@ def main():
     labels = encode_labels(data, encoder)
 
     # train the model
-    kernel_type = "linear"
+    # kernel_type = "linear"
+    kernel_type = 'rbf'
     print("Training SVM with " + kernel_type + " kernel...")
     rec = SVC(C=1.0, kernel=kernel_type, probability=True)
     rec.fit(data["embeddings"], labels)
