@@ -161,8 +161,8 @@ def main():
 
     # choose dataset path
     # olivetti option
-    # path_data = "without_mask_data/olivetti/images" #arg parse this
-    path_data = "without_mask_data/test2"
+    path_data = "without_mask_data/olivetti/images" #arg parse this
+    # path_data = "without_mask_data/test2"
     # blue mask option
     path_to_mask_image = "mask_images/blue-mask.png"
 
