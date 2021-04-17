@@ -10,7 +10,7 @@ import os
 # model=load_model("./model2-010.model")
 labels_dict={False:'without mask',True:'mask'}
 color_dict={False:(0,0,255),True:(0,255,0)}
-model=load_model("./has_mask/model2-003.model")
+model=load_model("./has_mask/model2-010.model")
 
 def has_mask(img):
     resized=cv2.resize(img,(150,150))

@@ -43,7 +43,7 @@ validation_datagen = ImageDataGenerator(rescale=1.0/255)
 validation_generator = validation_datagen.flow_from_directory(VALIDATION_DIR, 
                                                          batch_size=10, 
                                                          target_size=(150, 150))
-checkpoint = ModelCheckpoint('model2-{epoch:03d}.model',monitor='val_loss',verbose=0,save_best_only=True,mode='auto')
+checkpoint = ModelCheckpoint('model2-{epoch:03d}.model',monitor='val_loss',verbose=0,save_best_only=False,mode='auto')
 history = model.fit_generator(train_generator,
                               epochs=10,
                               validation_data=validation_generator,
