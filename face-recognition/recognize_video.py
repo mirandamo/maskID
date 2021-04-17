@@ -18,10 +18,10 @@ ap.add_argument("-d", "--detector", required=True,
 	help="path to OpenCV's deep learning face detector")
 ap.add_argument("-m", "--embedding-model", required=True,
 	help="path to OpenCV's deep learning face embedding model")
-ap.add_argument("-r", "--recognizer", required=True,
-	help="path to model trained to recognize faces")
-ap.add_argument("-l", "--le", required=True,
-	help="path to label encoder")
+# ap.add_argument("-r", "--recognizer", required=True,
+# 	help="path to model trained to recognize faces")
+# ap.add_argument("-l", "--le", required=True,
+# 	help="path to label encoder")
 ap.add_argument("-c", "--confidence", type=float, default=0.5,
 	help="minimum probability to filter weak detections")
 args = vars(ap.parse_args())
@@ -38,8 +38,16 @@ print("[INFO] loading face recognizer...")
 embedder = cv2.dnn.readNetFromTorch(args["embedding_model"])
 
 # load the actual face recognition model along with the label encoder
-recognizer = pickle.loads(open(args["recognizer"], "rb").read())
-le = pickle.loads(open(args["le"], "rb").read())
+# recognizer = pickle.loads(open(args["recognizer"], "rb").read())
+# le = pickle.loads(open(args["le"], "rb").read())
+
+
+
+recognizer_mask = pickle.loads(open("./output/recognizer_mask.pickle", "rb").read())
+le_mask = pickle.loads(open("./output/le_mask.pickle", "rb").read())
+
+recognizer_nomask = pickle.loads(open("./output/recognizer_nomask.pickle", "rb").read())
+le_nomask = pickle.loads(open("./output/le_nomask.pickle", "rb").read())
 
 # initialize the video stream, then allow the camera sensor to warm up
 print("[INFO] starting video stream...")
@@ -85,7 +93,7 @@ while True:
 
 			# extract the face ROI
 			face = frame[startY:endY, startX:endX]
-			# maskBool = has_mask(face)
+			maskBool = has_mask(face)  # Bool for wearing mask or not
 			(fH, fW) = face.shape[:2]
 
 			# ensure the face width and height are sufficiently large
@@ -100,11 +108,23 @@ while True:
 			embedder.setInput(faceBlob)
 			vec = embedder.forward()
 
-			# perform classification to recognize the face
-			preds = recognizer.predict_proba(vec)[0]
-			j = np.argmax(preds)
-			proba = preds[j]
-			name = le.classes_[j]
+			# # perform classification to recognize the face
+			# preds = recognizer.predict_proba(vec)[0]
+			# j = np.argmax(preds)
+			# proba = preds[j]
+			# name = le.classes_[j]
+
+			name = ""
+			if maskBool:
+				preds = recognizer_mask.predict_proba(vec)[0]
+				j = np.argmax(preds)
+				proba = preds[j]
+				name = le_mask.classes_[j]
+			else:
+				preds = recognizer_nomask.predict_proba(vec)[0]
+				j = np.argmax(preds)
+				proba = preds[j]
+				name = le_nomask.classes_[j]
 
 			# draw the bounding box of the face along with the
 			# associated probability
