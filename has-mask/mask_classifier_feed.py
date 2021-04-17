@@ -7,11 +7,11 @@ import os
 # from maskModel.model import mask_classifier
 # from nomaskModel.model import nomask_classifier
 
-model=load_model("./model2-010.model")
 labels_dict={False:'without mask',True:'mask'}
 color_dict={False:(0,0,255),True:(0,255,0)}
 
 def hasMask(img):
+    model=load_model("./model2-010.model")
     resized=cv2.resize(img,(150,150))
     normalized=resized/255.0
     reshaped=np.reshape(normalized,(1,150,150,3))
