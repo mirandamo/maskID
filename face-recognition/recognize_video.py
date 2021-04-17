@@ -8,6 +8,9 @@ import pickle
 import time
 import cv2
 import os
+# import sys
+# sys.path.append(os.path.abspath('..')) 
+from has_mask.mask_classifier_feed import has_mask
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -82,6 +85,7 @@ while True:
 
 			# extract the face ROI
 			face = frame[startY:endY, startX:endX]
+			# maskBool = has_mask(face)
 			(fH, fW) = face.shape[:2]
 
 			# ensure the face width and height are sufficiently large
