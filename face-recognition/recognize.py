@@ -5,6 +5,7 @@ import imutils
 import pickle
 import cv2
 import os
+from has_mask.mask_classifier_feed import has_mask
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -14,10 +15,12 @@ ap.add_argument("-d", "--detector", required=True,
 	help="path to OpenCV's deep learning face detector")
 ap.add_argument("-m", "--embedding-model", required=True,
 	help="path to OpenCV's deep learning face embedding model")
-ap.add_argument("-r", "--recognizer", required=True,
-	help="path to model trained to recognize faces")
-ap.add_argument("-l", "--le", required=True,
-	help="path to label encoder")
+# ap.add_argument("-r", "--recognizer", required=True,
+# 	help="path to model trained to recognize faces")
+# ap.add_argument("-l", "--le", required=True,
+# 	help="path to label encoder")
+ap.add_argument("-k", "--kernel", default="rbf",
+	help="select a kernel for the SVM classification [lin, poly, rbf]")
 ap.add_argument("-c", "--confidence", type=float, default=0.5,
 	help="minimum probability to filter weak detections")
 args = vars(ap.parse_args())
@@ -33,9 +36,17 @@ detector = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
 print("[INFO] loading face recognizer...")
 embedder = cv2.dnn.readNetFromTorch(args["embedding_model"])
 
-# load the actual face recognition model along with the label encoder
-recognizer = pickle.loads(open(args["recognizer"], "rb").read())
-le = pickle.loads(open(args["le"], "rb").read())
+# # load the actual face recognition model along with the label encoder
+# recognizer = pickle.loads(open(args["recognizer"], "rb").read())
+# le = pickle.loads(open(args["le"], "rb").read())
+
+kernel_type = args["kernel"]
+
+recognizer_mask = pickle.loads(open("./output/recognizer_mask_"+kernel_type+".pickle", "rb").read())
+le_mask = pickle.loads(open("./output/le_mask_"+kernel_type+".pickle", "rb").read())
+
+recognizer_nomask = pickle.loads(open("./output/recognizer_nomask_"+kernel_type+".pickle", "rb").read())
+le_nomask = pickle.loads(open("./output/le_nomask_"+kernel_type+".pickle", "rb").read())
 
 # load the image, resize it to have a width of 600 pixels (while
 # maintaining the aspect ratio), and then grab the image dimensions
@@ -68,6 +79,7 @@ for i in range(0, detections.shape[2]):
 
 		# extract the face ROI
 		face = image[startY:endY, startX:endX]
+		maskBool = has_mask(face)  # Bool for wearing mask or not
 		(fH, fW) = face.shape[:2]
 
 		# ensure the face width and height are sufficiently large
@@ -83,10 +95,21 @@ for i in range(0, detections.shape[2]):
 		vec = embedder.forward()
 
 		# perform classification to recognize the face
-		preds = recognizer.predict_proba(vec)[0]
-		j = np.argmax(preds)
-		proba = preds[j]
-		name = le.classes_[j]
+		# preds = recognizer.predict_proba(vec)[0]
+		# j = np.argmax(preds)
+		# proba = preds[j]
+		# name = le.classes_[j]
+		name = ""
+		if maskBool:
+			preds = recognizer_mask.predict_proba(vec)[0]
+			j = np.argmax(preds)
+			proba = preds[j]
+			name = le_mask.classes_[j]
+		else:
+			preds = recognizer_nomask.predict_proba(vec)[0]
+			j = np.argmax(preds)
+			proba = preds[j]
+			name = le_nomask.classes_[j]
 
         # draw the bounding box of the face along with the associated
 		# probability
