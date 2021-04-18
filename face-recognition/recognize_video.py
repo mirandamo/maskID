@@ -22,6 +22,8 @@ ap.add_argument("-m", "--embedding-model", required=True,
 # 	help="path to model trained to recognize faces")
 # ap.add_argument("-l", "--le", required=True,
 # 	help="path to label encoder")
+ap.add_argument("-k", "--kernel", default="rbf",
+	help="select a kernel for the SVM classification [lin, poly, rbf]")
 ap.add_argument("-c", "--confidence", type=float, default=0.5,
 	help="minimum probability to filter weak detections")
 args = vars(ap.parse_args())
@@ -41,13 +43,13 @@ embedder = cv2.dnn.readNetFromTorch(args["embedding_model"])
 # recognizer = pickle.loads(open(args["recognizer"], "rb").read())
 # le = pickle.loads(open(args["le"], "rb").read())
 
+kernel_type = args["kernel"]
 
+recognizer_mask = pickle.loads(open("./output/recognizer_mask_"+kernel_type+".pickle", "rb").read())
+le_mask = pickle.loads(open("./output/le_mask_"+kernel_type+".pickle", "rb").read())
 
-recognizer_mask = pickle.loads(open("./output/recognizer_mask.pickle", "rb").read())
-le_mask = pickle.loads(open("./output/le_mask.pickle", "rb").read())
-
-recognizer_nomask = pickle.loads(open("./output/recognizer_nomask.pickle", "rb").read())
-le_nomask = pickle.loads(open("./output/le_nomask.pickle", "rb").read())
+recognizer_nomask = pickle.loads(open("./output/recognizer_nomask_"+kernel_type+".pickle", "rb").read())
+le_nomask = pickle.loads(open("./output/le_nomask_"+kernel_type+".pickle", "rb").read())
 
 # initialize the video stream, then allow the camera sensor to warm up
 print("[INFO] starting video stream...")
