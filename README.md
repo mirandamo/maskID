@@ -14,7 +14,11 @@ git clone https://github.com/mirandamo/maskID.git
 To train the mask neural network, run the following command. You will need to have `tensorflow`, `imutils`, `sklearn`, amongst others installed. Run `pip install <module>` if needed. Activate the cs1430 environment as necessary.
 
 ```python
+# train mask neural network using dataset
 (cs1430_env) \maskID\face-recognition\has-mask> python model_train.py
+
+# (optional) run the mask classifier by flagging the --run-live flag True
+(cs1430_env) \maskID\face-recognition\has-mask> python mask_classifier_feed.py -r True
 ```
 
 
@@ -28,11 +32,7 @@ To perform face recognition, feature's need to be extracted by running `extract_
 
 ```python
 # extract feature vectors
-(cs1430_env) \maskID\face-recognition> python .\extract_embeddings.py 
---dataset dataset/nomask 
---embeddings output/embeddings_nomask.pickle 
---detector face_detection_model 
---embedding-model .\openface.nn4.small2.v1.t7
+(cs1430_env) \maskID\face-recognition> python .\extract_embeddings.py --dataset dataset/nomask --embeddings output/embeddings_nomask.pickle --detector face_detection_model --embedding-model .\openface.nn4.small2.v1.t7
 
 # fit SVM
 (cs1430_env) \maskID\face-recognition> python .\train_model.py 
@@ -41,10 +41,7 @@ To perform face recognition, feature's need to be extracted by running `extract_
 --le output/le_nomask_rbf.pickle
 
 # run live video feed
-(cs1430_env) \maskID\face-recognition> python .\recognize_video.py 
---detector .\face_detection_model\ 
---embedding-model .\openface.nn4.small2.v1.t7 
--k rbf
+(cs1430_env) \maskID\face-recognition> python .\recognize_video.py --detector .\face_detection_model\ --embedding-model .\openface.nn4.small2.v1.t7 -k rbf
 
 ```
 
