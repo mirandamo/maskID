@@ -17,7 +17,7 @@ To train the mask neural network, run the following command. You will need to ha
 # train mask neural network using dataset
 (cs1430_env) \maskID\face-recognition\has-mask> python model_train.py
 
-# (optional) run the mask classifier by flagging the --run-live flag True
+# (optional) run the mask classifier live by flagging the --run-live flag True
 (cs1430_env) \maskID\face-recognition\has-mask> python mask_classifier_feed.py -r True
 ```
 

@@ -27,7 +27,11 @@ def has_mask(img):
 
 def main():
     size = 4
-    webcam = cv2.VideoCapture(0) #Use camera 0
+    # running with webcam
+    # webcam = cv2.VideoCapture(0) #Use camera 0
+
+    # Running on a video https://learnopencv.com/read-write-and-display-a-video-using-opencv-cpp-python/
+    # webcam = cv2.VideoCapture('../../maskID_presentation/ig.mp4')
 
     # We load the xml file
     # classifier = cv2.CascadeClassifier('./data/haarcascade_frontalface_default.xml')
